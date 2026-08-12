@@ -118,7 +118,7 @@ describe('Level 3 — Transactions, Pagination & Async Workflows', () => {
         paymentStatus: 'FAILED',
       });
 
-    expect(res.status).toBeGreaterThanOrEqual(400);
+    expect(res.status).toBe(402);
 
     const after = await prisma.inventoryItem.findUnique({
       where: { productId: product.id },

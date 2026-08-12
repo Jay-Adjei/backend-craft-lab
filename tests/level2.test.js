@@ -107,8 +107,9 @@ describe('Level 2 — Auth, JWT, RBAC & Security', () => {
       .post('/api/auth/login')
       .send({ email: 'adm@test.com', password: 'Admin123!' });
 
+    // Product create is fully wired (not a Level 1 TODO) — proves ADMIN passes RBAC
     const allowed = await request(app)
-      .post('/api/inventory')
+      .post('/api/products')
       .set('Authorization', `Bearer ${adminLogin.body.accessToken}`)
       .send({
         name: 'Should Pass',
