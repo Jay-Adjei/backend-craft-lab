@@ -27,62 +27,37 @@ async function createProduct(data) {
 
 /**
  * Paginated, filterable product listing.
+ *
+ * TODO [Level 3]: Implement pagination, filtering, and dynamic search
+ *
+ * Build a Prisma `where` from query:
+ * - search → OR on name/description/sku contains
+ * - category → exact match
+ * - minPrice / maxPrice → price.gte / price.lte
+ * - Always filter isActive: true
+ *
+ * Then:
+ * - skip = (page - 1) * limit
+ * - findMany with orderBy: { [sortBy]: sortOrder }, skip, take: limit
+ * - count with the same where
+ * - return { items, pagination: { page, limit, total, totalPages } }
  */
 async function listProducts(query) {
-  // SOLUTION [Level 3]: Pagination, filtering, and dynamic search
-  const {
-    page = 1,
-    limit = 10,
-    search,
-    category,
-    minPrice,
-    maxPrice,
-    sortBy = 'createdAt',
-    sortOrder = 'desc',
-  } = query;
-
-  const where = {
-    isActive: true,
-  };
-
-  if (search) {
-    where.OR = [
-      { name: { contains: search } },
-      { description: { contains: search } },
-      { sku: { contains: search } },
-    ];
-  }
-
-  if (category) {
-    where.category = category;
-  }
-
-  if (minPrice !== undefined || maxPrice !== undefined) {
-    where.price = {};
-    if (minPrice !== undefined) where.price.gte = minPrice;
-    if (maxPrice !== undefined) where.price.lte = maxPrice;
-  }
-
-  const skip = (page - 1) * limit;
-
-  const [items, total] = await Promise.all([
-    prisma.product.findMany({
-      where,
-      include: { inventory: true },
-      orderBy: { [sortBy]: sortOrder },
-      skip,
-      take: limit,
-    }),
-    prisma.product.count({ where }),
-  ]);
+  // TODO [Level 3]: Implement pagination / filtering / search
+  // Stub returns every active product and ignores query params.
+  void query;
+  const items = await prisma.product.findMany({
+    where: { isActive: true },
+    include: { inventory: true },
+  });
 
   return {
     items,
     pagination: {
-      page,
-      limit,
-      total,
-      totalPages: Math.ceil(total / limit) || 0,
+      page: 1,
+      limit: items.length,
+      total: items.length,
+      totalPages: 1,
     },
   };
 }

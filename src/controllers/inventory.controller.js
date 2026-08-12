@@ -2,15 +2,15 @@ const inventoryService = require('../services/inventory.service');
 const { asyncHandler } = require('../middleware/errorHandler');
 
 const create = asyncHandler(async (req, res) => {
-  // SOLUTION [Level 1]: Create inventory via service
-  const item = await inventoryService.createInventoryItem(req.body);
-  res.status(201).json(item);
+  // TODO [Level 1]: Call inventoryService.createInventoryItem(req.body) and return 201
+  // Stub keeps the server bootable while the service is incomplete.
+  void inventoryService;
+  return res.status(501).json({ error: 'Not implemented: create inventory' });
 });
 
 const list = asyncHandler(async (req, res) => {
-  // SOLUTION [Level 1]: List inventory via service
-  const items = await inventoryService.listInventoryItems();
-  res.status(200).json({ items });
+  // TODO [Level 1]: Call inventoryService.listInventoryItems() and return { items }
+  return res.status(200).json({ items: [] });
 });
 
 const getById = asyncHandler(async (req, res) => {

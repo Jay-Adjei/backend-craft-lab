@@ -11,34 +11,28 @@ function asyncHandler(fn) {
 }
 
 /**
- * Centralized error-handling middleware.
- * Must be registered after all routes: app.use(errorHandler)
+ * TODO [Level 1]: Implement centralized error handling middleware
+ *
+ * Requirements:
+ * - If err is a ZodError, respond with 400 and { error: 'Validation failed', details: [...] }
+ * - If err is an AppError (or has statusCode), use that status and message
+ * - Otherwise respond with 500 and a safe message
+ *
+ * Hint: ZodError exposes err.errors with { path, message } entries.
+ * Hint: AppError is defined in src/utils/AppError.js
+ *
+ * Until implemented, every error becomes a generic 500 — validation & 404s look like crashes.
  */
 function errorHandler(err, req, res, next) {
-  // SOLUTION [Level 1]: Centralized error handling
-  if (err instanceof ZodError) {
-    return res.status(400).json({
-      error: 'Validation failed',
-      details: err.errors.map((e) => ({
-        path: e.path.join('.'),
-        message: e.message,
-      })),
-    });
-  }
+  // TODO [Level 1]: Implement centralized error handling middleware
+  // Replace this stub with proper ZodError / AppError / fallback handling.
+  // Keep the 4-arg signature (err, req, res, next) so Express treats this as error middleware.
+  void ZodError;
+  void AppError;
+  void next;
 
-  if (err instanceof AppError || err.statusCode) {
-    return res.status(err.statusCode || 500).json({
-      error: err.message,
-      ...(err.details ? { details: err.details } : {}),
-    });
-  }
-
-  if (process.env.NODE_ENV !== 'test') {
-    // eslint-disable-next-line no-console
-    console.error(err);
-  }
   return res.status(500).json({
-    error: process.env.NODE_ENV === 'production' ? 'Internal server error' : err.message,
+    error: 'Unhandled error (error handler incomplete)',
   });
 }
 
