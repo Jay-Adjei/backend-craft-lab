@@ -14,7 +14,7 @@
     "db:seed": "node prisma/seed.js",
     "db:reset": "prisma migrate reset --force",
     "db:test:prepare": "cross-env DATABASE_URL=file:./test.db prisma db push",
-    "postinstall": "prisma generate"
+    "postinstall": "node scripts/prisma-generate.js"
   },
   "keywords": [
     "express",
