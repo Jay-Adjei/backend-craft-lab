@@ -76,20 +76,53 @@ Health check: [http://localhost:3000/api/health](http://localhost:3000/api/healt
 
 ## Running tests
 
-Tests use a separate SQLite file (`prisma/test.db`). Prepare it once, then run:
+Tests use a separate SQLite file (`prisma/test.db`). The npm scripts set env vars for you (Windows + macOS/Linux via `cross-env`):
 
 ```bash
-DATABASE_URL="file:./test.db" npx prisma db push
+npm run db:test:prepare   # optional — `npm test` also runs db push
 npm test
+npm test -- tests/level1.test.js   # run one level
 ```
 
 On `main`, tests **fail** until you complete the TODOs. On `solutions`, they **pass**.
 
 ```bash
 git checkout solutions
-DATABASE_URL="file:./test.db" npx prisma db push
 npm test
 ```
+
+## Troubleshooting
+
+### Windows: `npm install` fails with `EPERM` renaming `query_engine-windows.dll.node`
+
+Prisma cannot overwrite its native engine DLL because another process has it open (a running `node` server, VS Code Prisma extension, antivirus, or a leftover Node process).
+
+**Fix:**
+
+1. Stop the API if it is running (`Ctrl+C` in the terminal that ran `npm run dev`).
+2. Close other terminals in this project. Optionally close VS Code, or disable the Prisma extension temporarily.
+3. Delete the locked client folder and reinstall:
+
+```powershell
+Remove-Item -Recurse -Force node_modules\.prisma -ErrorAction SilentlyContinue
+npm install
+```
+
+If `npm install` still fails on `postinstall`, skip lifecycle scripts then generate separately:
+
+```powershell
+npm install --ignore-scripts
+npm run db:generate
+```
+
+If generate still reports `EPERM`, kill leftover Node processes and retry:
+
+```powershell
+Get-Process node -ErrorAction SilentlyContinue | Stop-Process -Force
+npm run db:generate
+```
+
+The `package.json#prisma is deprecated` line is only a **warning** (Prisma 7 will use a config file). It does not cause the install failure.
 
 ## Lab levels
 
