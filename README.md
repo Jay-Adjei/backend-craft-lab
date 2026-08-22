@@ -204,6 +204,8 @@ Concepts: Prisma `$transaction` for order + stock + invoice, pagination/filterin
 
 Import a collection with a base URL variable `{{baseUrl}}` = `http://localhost:3000/api` and an `auth` folder that saves `accessToken` from login into an environment variable.
 
+**Step-by-step manual tests per task:** see [docs/POSTMAN_TESTING.md](docs/POSTMAN_TESTING.md).
+
 ## Switching to PostgreSQL (optional)
 
 1. Change `provider` in `prisma/schema.prisma` to `"postgresql"`.
