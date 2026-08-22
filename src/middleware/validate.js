@@ -7,12 +7,15 @@
  * - Assign the parsed result back to req[property]
  * - On failure, pass the error to next(err) so the error handler can format it
  */
-function validate(schema, property = 'body') {
+function validate(schema, property = "body") {
   return (req, res, next) => {
     // TODO [Level 1]: Implement Zod request validation
     // Currently validation is skipped so invalid payloads reach controllers.
-    void schema;
-    void property;
+    try {
+      req[property] = schema.parse(req[property]);
+    } catch (error) {
+      next(error);
+    }
     return next();
   };
 }
