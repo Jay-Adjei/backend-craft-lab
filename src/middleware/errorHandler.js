@@ -30,7 +30,7 @@ function errorHandler(err, req, res, next) {
   if (err instanceof ZodError) {
     return res.status(400).json({
       error: "validation failed",
-      details: err.errors.map((e) => ({ path: e.path, message: e.message })),
+      details: err.errors.map((e) => ({ path: e.path.join("."), message: e.message })),
     });
   } else if (err instanceof AppError) {
     return res

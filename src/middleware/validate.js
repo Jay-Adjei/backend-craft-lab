@@ -13,10 +13,10 @@ function validate(schema, property = "body") {
     // Currently validation is skipped so invalid payloads reach controllers.
     try {
       req[property] = schema.parse(req[property]);
+      next()
     } catch (error) {
       next(error);
     }
-    return next();
   };
 }
 
