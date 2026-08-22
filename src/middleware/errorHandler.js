@@ -1,5 +1,5 @@
-const { ZodError } = require('zod');
-const { AppError } = require('../utils/AppError');
+const { ZodError } = require("zod");
+const { AppError } = require("../utils/AppError");
 
 /**
  * Wraps async route handlers so rejected promises reach the error middleware.
@@ -27,13 +27,20 @@ function errorHandler(err, req, res, next) {
   // TODO [Level 1]: Implement centralized error handling middleware
   // Replace this stub with proper ZodError / AppError / fallback handling.
   // Keep the 4-arg signature (err, req, res, next) so Express treats this as error middleware.
-  void ZodError;
-  void AppError;
-  void next;
-
-  return res.status(500).json({
-    error: 'Unhandled error (error handler incomplete)',
-  });
+  if (err instanceof ZodError) {
+    return res.status(400).json({
+      error: "validation failed",
+      details: err.errors.map((e) => ({ path: e.path, message: e.message })),
+    });
+  } else if (err instanceof AppError) {
+    return res
+      .status(err.statusCode || 500)
+      .json({ error: err.message || "App error", details: err.details });
+  } else {
+    return res.status(500).json({
+      error: err.message,
+    });
+  }
 }
 
 function notFoundHandler(req, res, next) {
